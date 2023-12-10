@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.pef": "xml",
+        "*.tcc": "cpp",
+        "new": "cpp"
+    }
+}
