@@ -5,6 +5,7 @@
 #include "string.h"
 #include "stdint.h"
 #include "stdio.h"
+#include "machine.h"
 
 
 #if defined(LINUX)
@@ -17,6 +18,9 @@
 // TODO
 #define millis() 0
 #define micros() 0
+
+#define within(value, min, max) ((value >= min) && (value <= max))
+
 
 
 #endif /* MAIN_H */

@@ -5,6 +5,7 @@
 #include "controller.h"
 #include "receiver.h"
 #include "mavlink_base.h"
+#include "motor_controller.h"
 
 
 class AutoRover : VSRTOS_Task
@@ -14,6 +15,7 @@ class AutoRover : VSRTOS_Task
         Controller* controller;
         Receiver* receiver;
         MavlinkBase* mavlink;
+        MotorController* motorController;
 
         AutoRover();
         void init();
