@@ -1,13 +1,32 @@
 #include "mavlink_base.h"
+#include "state.h"
 
 
-void MavlinkBase::send_mavlink_message() {
-    write(m_tx_buf, mavlink_msg_to_send_buffer(m_tx_buf, &m_tx_msg));
+MavlinkBase::MavlinkBase()
+: m_last_sent_heartbeat(0),
+  m_last_sent_local_pos(0)
+{
+    Serial.begin(115200);
 }
+
+
 
 void MavlinkBase::update()
 {
-    broadcastHeartbeat();
+    uint32_t now = millis();
+
+    if (time_to_update(now - m_last_sent_heartbeat, MAVLINK_SEND_FREQUENCY_HZ_HEARTBEAT))
+    {
+        broadcastHeartbeat();
+        m_last_sent_heartbeat = millis();
+    }
+
+    if (time_to_update(now - m_last_sent_local_pos, MAVLINK_SEND_FREQUENCY_HZ_LOCAL_POS))
+    {
+        broadcastLocalPosition();
+        m_last_sent_local_pos = millis();
+    }
+
 }
 
 void MavlinkBase::broadcastHeartbeat()
@@ -22,8 +41,28 @@ void MavlinkBase::broadcastHeartbeat()
     heartbeat.system_status = MAV_STATE_STANDBY; // Set system status to standby
 
     // Pack the heartbeat message into the MAVLink message
-    mavlink_msg_heartbeat_encode(255, 0, &m_tx_msg, &heartbeat);
+    mavlink_msg_heartbeat_encode(255, 0, &m_txMsg, &heartbeat);
 
-    send_mavlink_message();
+    sendMavlinkMessage();
 }
 
+void MavlinkBase::broadcastLocalPosition()
+{
+    mavlink_local_position_ned_t pos =
+    {
+        .time_boot_ms = millis(),
+        .x = state.localPosNed.x,
+        .y = state.localPosNed.y,
+        .z = state.localPosNed.z,
+        .vx = state.locaLVelNed.x,
+        .vy = state.locaLVelNed.y,
+        .vz = state.locaLVelNed.z
+    };
+    mavlink_msg_local_position_ned_encode(255, 0, &m_txMsg, &pos);
+
+    sendMavlinkMessage();
+}
+
+void MavlinkBase::sendMavlinkMessage() {
+    write(m_txBuf, mavlink_msg_to_send_buffer(m_txBuf, &m_txMsg));
+}

@@ -3,8 +3,8 @@
 
 void IMU::update()
 {
-    ImuReading newReading = doSample();
-    newReading.timestamp = millis();
+    lastReading = doSample();
+    lastReading.timestamp = millis();
 }
 
 bool IMU::init()

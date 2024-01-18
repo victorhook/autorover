@@ -4,11 +4,15 @@
 #include "main.h"
 #include "controller.h"
 #include "receiver.h"
+#include "imu.h"
 #include "mavlink_base.h"
 #include "motor_controller.h"
+#include "battery.h"
+#include "statusled.h"
+#include "rgbled.h"
+#include "state.h"
 
-
-class AutoRover : VSRTOS_Task
+class AutoRover
 {
     public:
         // Controllers
@@ -16,12 +20,18 @@ class AutoRover : VSRTOS_Task
         Receiver* receiver;
         MavlinkBase* mavlink;
         MotorController* motorController;
+        IMU* imu;
+        Battery* battery;
+        StatusLed* statusled;
+        RGB_Led* rgbLed;
+        State state;
 
         AutoRover();
-        void init();
-
-        void update() override;
+        bool init();
 };
+
+
+extern AutoRover AR;
 
 
 #endif /* AUTOROVER_H */

@@ -1,9 +1,12 @@
 #include "imu_mpu6050.h"
+#include <Wire.h>
 
 
 bool IMU_MPU6050::doInit()
 {
     // TODO: Set pins?
+    //Wire.begin(PIN_SDA, PIN_SCL, 400000);
+    Wire.begin();
     return m_mpu.begin();
 }
 

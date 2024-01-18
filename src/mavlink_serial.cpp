@@ -4,7 +4,6 @@
 
 MavlinkSerial::MavlinkSerial()
 {
-    Serial.begin(115200);
 }
 
 

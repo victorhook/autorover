@@ -2,6 +2,7 @@
 #define MOTOR_CONTROLLER_DRV8833
 
 #include "motor_controller.h"
+#include "Servo.h"
 
 
 class MotorControllerDRV8833 : public MotorController
@@ -12,14 +13,13 @@ class MotorControllerDRV8833 : public MotorController
     protected:
         void doSetThrottle(const int16_t throttle) override;
         void doSetSteer(const int16_t steer) override;
+        bool doInit();
 
     private:
-        uint8_t m_ain1;
-        uint8_t m_ain2;
-        uint8_t m_servo;
-        uint8_t m_ain1Channel;
-        uint8_t m_ain2Channel;
-        uint8_t m_servoChannel;
+        uint8_t m_ain1Pin;
+        uint8_t m_ain2Pin;
+        uint8_t m_servoPin;
+        Servo   m_servo;
 };
 
 

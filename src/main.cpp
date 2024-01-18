@@ -1,7 +1,4 @@
 #include "autorover.h"
-#include "mavlink/common/mavlink.h"
-
-AutoRover AR;
 
 
 #ifdef LINUX
@@ -24,13 +21,25 @@ int main()
 
 #endif
 
+
+
 void setup()
 {
-    AR.init();
+    Serial.begin(115200);
+    if (!AR.init())
+    {
+        while (1)
+        {
+            Serial.println("AutoRover failed during initialization!");
+            delay(1000);
+        }
+    }
 
     vsrtos_create_task(AR.controller, "Controller", 100, 1);
-    vsrtos_create_task(AR.receiver, "Receiver", 50, 2);
-    vsrtos_create_task(AR.mavlink, "Mavlink", 1, 2);
+    vsrtos_create_task(AR.receiver,   "Receiver",   100, 2);
+    vsrtos_create_task(AR.imu,        "IMU",        100, 2);
+    vsrtos_create_task(AR.battery,    "Battery",    20,  2);
+    //vsrtos_create_task(AR.mavlink, "Mavlink", 100, 2);
 
     vsrtos_scheduler_start();
 }

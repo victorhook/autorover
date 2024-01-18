@@ -7,6 +7,12 @@
 #define MOTOR_CONTROL_MIN_VALUE 1000
 #define MOTOR_CONTROL_MAX_VALUE 2000
 #define MOTOR_CONTROL_MID_VALUE (MOTOR_CONTROL_MIN_VALUE + ((MOTOR_CONTROL_MAX_VALUE - MOTOR_CONTROL_MIN_VALUE) / 2))
+#define MOTOR_STEER_MIN_VALUE 1000
+#define MOTOR_STEER_MAX_VALUE 2000
+#define MOTOR_STEER_MID_VALUE (MOTOR_STEER_MIN_VALUE + ((MOTOR_STEER_MAX_VALUE - MOTOR_STEER_MIN_VALUE) / 2))
+#define MOTOR_PWM_IDLE_THRESHOLD 75
+#define MOTOR_PWM_IDLE_THRESHOLD_HIGH (MOTOR_CONTROL_MID_VALUE + MOTOR_PWM_IDLE_THRESHOLD)
+#define MOTOR_PWM_IDLE_THRESHOLD_LOW  (MOTOR_CONTROL_MID_VALUE - MOTOR_PWM_IDLE_THRESHOLD)
 
 
 class MotorController
@@ -36,11 +42,14 @@ class MotorController
          */
         bool setSteer(const int16_t steer);
 
+        bool init();
+
     protected:
         int16_t m_currentTargetThrottle;
         int16_t m_currentTargetSteer;
         virtual void doSetThrottle(const int16_t throttle) = 0;
         virtual void doSetSteer(const int16_t steer) = 0;
+        virtual bool doInit() = 0;
 
 };
 

@@ -6,6 +6,17 @@
 
 #define RADIO_MAX_CHANNELS 18
 
+enum AuxFunction
+{
+    AUX_FUNCTION_THROTTLE,
+    AUX_FUNCTION_YAW,
+    AUX_FUNCTION_ROLL,
+    AUX_FUNCTION_PITCH,
+    AUX_FUNCTION_ARM,
+    AUX_FUNCTION_BEEP,
+    AUX_FUNCTION_REBOOT
+};
+
 
 struct RadioPacket
 {
@@ -17,11 +28,15 @@ class Receiver : public VSRTOS_Task
 {
     protected:
         RadioPacket m_lastPacket;
-        uint16_t m_connectionTimoutMs;
+        uint32_t    m_nbr_of_packets;
+        uint16_t    m_connectionTimoutMs;
     public:
         Receiver(const uint16_t connectionTimoutMs = 500);
         bool isConnected();
         const RadioPacket* getLastPacket();
+        uint32_t getNbrOfReceivedPackets();
+
+        virtual bool init() = 0;
 };
 
 
